@@ -1,0 +1,41 @@
+import tkinter as tk
+
+# -------------------------
+# Simple prediction logic
+# -------------------------
+def predict():
+    attendance = int(attendance_entry.get())
+    marks = int(marks_entry.get())
+
+    if attendance >= 75 and marks >= 40:
+        result_label.config(text="Result: PASS ✅", fg="green")
+    else:
+        result_label.config(text="Result: FAIL ❌", fg="red")
+
+# -------------------------
+# Create window
+# -------------------------
+root = tk.Tk()
+root.title("Student Result Prediction")
+root.geometry("300x250")
+
+# -------------------------
+# GUI components
+# -------------------------
+tk.Label(root, text="Attendance (%)").pack(pady=5)
+attendance_entry = tk.Entry(root)
+attendance_entry.pack()
+
+tk.Label(root, text="Internal Marks").pack(pady=5)
+marks_entry = tk.Entry(root)
+marks_entry.pack()
+
+tk.Button(root, text="Predict", command=predict).pack(pady=15)
+
+result_label = tk.Label(root, text="Result: ---", font=("Arial", 12))
+result_label.pack()
+
+# -------------------------
+# Run app
+# -------------------------
+root.mainloop()
