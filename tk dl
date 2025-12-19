@@ -1,0 +1,73 @@
+import tkinter as tk
+import pandas as pd
+import numpy as np
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense
+
+# -------------------------
+# Step 1: Create DataFrame
+# -------------------------
+data = {
+    "Attendance": [60, 70, 80, 90, 85, 50],
+    "Marks": [35, 45, 55, 75, 65, 30],
+    "Pass": [0, 1, 1, 1, 1, 0]
+}
+
+df = pd.DataFrame(data)
+
+X = df[["Attendance", "Marks"]]
+y = df["Pass"]
+
+# -------------------------
+# Step 2: Build DL Model
+# -------------------------
+model = Sequential([
+    Dense(8, activation="relu", input_shape=(2,)),
+    Dense(4, activation="relu"),
+    Dense(1, activation="sigmoid")
+])
+
+model.compile(
+    optimizer="adam",
+    loss="binary_crossentropy",
+    metrics=["accuracy"]
+)
+
+model.fit(X, y, epochs=100, verbose=0)
+
+# -------------------------
+# Step 3: GUI Logic
+# -------------------------
+def predict():
+    att = int(attendance_entry.get())
+    mark = int(marks_entry.get())
+
+    input_data = np.array([[att, mark]])
+    prediction = model.predict(input_data, verbose=0)[0][0]
+
+    if prediction >= 0.5:
+        result_label.config(text="Result: PASS ✅", fg="green")
+    else:
+        result_label.config(text="Result: FAIL ❌", fg="red")
+
+# -------------------------
+# Step 4: Tkinter GUI
+# -------------------------
+root = tk.Tk()
+root.title("DL Student Result Prediction")
+root.geometry("300x250")
+
+tk.Label(root, text="Attendance (%)").pack(pady=5)
+attendance_entry = tk.Entry(root)
+attendance_entry.pack()
+
+tk.Label(root, text="Internal Marks").pack(pady=5)
+marks_entry = tk.Entry(root)
+marks_entry.pack()
+
+tk.Button(root, text="Predict", command=predict).pack(pady=15)
+
+result_label = tk.Label(root, text="Result: ---", font=("Arial", 12))
+result_label.pack()
+
+root.mainloop()
